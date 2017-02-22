@@ -1,0 +1,9 @@
+PROGRAM_NAME=bs
+CC=gcc
+
+all: $(PROGRAM_NAME)
+$(PROGRAM_NAME): $(PROGRAM_NAME).c
+	$(CC) -o $(PROGRAM_NAME) $(PROGRAM_NAME).c
+clean:
+	rm -f $(PROGRAM_NAME)
+
