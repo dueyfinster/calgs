@@ -2,12 +2,14 @@
 # include <stdlib.h>
 
 int findSmallest(int * arrToSort, int currentSmallest){
+  int workingSmallest = 10000;
   for(int i=0; i < sizeof(arrToSort); i++){
-    if(arrToSort[i] < currentSmallest){
-      currentSmallest = arrToSort[i];
-      printf("Smallest is now: %d\n", currentSmallest);
+    if(arrToSort[i] != currentSmallest && arrToSort[i] < workingSmallest){
+      workingSmallest = arrToSort[i];
+      printf("Smallest is now: %d\n", workingSmallest);
     }
   }
+  return workingSmallest;
 }
 
 void printSortedArray(int * sortedArr){
