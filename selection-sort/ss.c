@@ -4,7 +4,9 @@
 int findSmallest(int * arrToSort, int currentSmallest){
   int workingSmallest = 10000;
   for(int i=0; i < sizeof(arrToSort); i++){
-    if(arrToSort[i] != currentSmallest && arrToSort[i] < workingSmallest){
+    if(arrToSort[i] != currentSmallest &&
+       arrToSort[i] > currentSmallest && 
+       arrToSort[i] < workingSmallest){
       workingSmallest = arrToSort[i];
       printf("Smallest is now: %d\n", workingSmallest);
     }
@@ -21,7 +23,7 @@ void printSortedArray(int * sortedArr){
 }
 
 void sort(int * arrToSort, int * sortedArr){
-  int currentSmallest = 10000;
+  int currentSmallest = 0;
   for(int i=0; i < sizeof(arrToSort); i++){
     currentSmallest = findSmallest((int *) arrToSort, currentSmallest);
     sortedArr[i] = currentSmallest;
