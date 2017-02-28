@@ -1,14 +1,31 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-void sort(int * arrToSort, int * sortedArr){
+int findSmallest(int * arrToSort, int currentSmallest){
   for(int i=0; i < sizeof(arrToSort); i++){
-    printf("%d\n",arrToSort[i]);
+    if(arrToSort[i] < currentSmallest){
+      currentSmallest = arrToSort[i];
+      printf("Smallest is now: %d\n", currentSmallest);
+    }
   }
 }
 
+void printSortedArray(int * sortedArr){
+  printf("Sorted Array: ");
+  for(int i=0; i < sizeof(sortedArr); i++){
+    printf(" %d,", sortedArr[i]);
+  }
+  printf("\n");
+}
 
-
+void sort(int * arrToSort, int * sortedArr){
+  int currentSmallest = 10000;
+  for(int i=0; i < sizeof(arrToSort); i++){
+    currentSmallest = findSmallest((int *) arrToSort, currentSmallest);
+    sortedArr[i] = currentSmallest;
+  }
+  printSortedArray((int *) sortedArr);
+}
 
 int main(int code, char** args){
   int arrToSort[10] = {11, 12, 2, 4, 55, 36, 35, 88, 29, 10};
