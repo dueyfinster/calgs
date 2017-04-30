@@ -1,51 +1,96 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-void printSortedArray(int * sortedArr){
-  printf("Sorted Array: ");
-  for(int i=0; i < sizeof(sortedArr); i++){
-    printf(" %d,", sortedArr[i]);
+void printSortedArray(char* name, int * sortedArr){
+  printf(" %s: [", name);
+  for(int i=0; i < 4; i++){
+    printf("%d=%d,", i,sortedArr[i]);
   }
-  printf("\n");
+  printf("]\n");
 }
 
-void sort(int * arrToSort, int * sortedArr){
+void setNewArrValues(int* oldArr, int* newArr){
+    for(int i=0; i<4; i++){
+      oldArr[i] = newArr[i]; // fill with same 
+    }
+}
+
+void splitArr(int* arrToSplit, int newIndex, int value, int oldIndex){
+  // Malloc new array
+  int* newArr = malloc(4 * sizeof(int));
+  // Fill array to split
+  if(newIndex == 0){
+    newArr[newIndex] = value; // fill with same 
+    printf("F[%d]=%d", newIndex, value);
+  }else{
+    for(int i=0; i<newIndex; i++){
+      newArr[i] = arrToSplit[i]; // fill with same 
+      printf("F[%d]=%d", i, arrToSplit[i]);
+    }
+    // Fill split
+    printf("F[%d]=%d", newIndex, value);
+    newArr[newIndex] = value;
+  }
+
+  // Fill array after split
+  for(int i=newIndex+1; i<4; i++){
+    if(i-1 != oldIndex){
+      printf("F[%d]=%d", i, arrToSplit[i-1]);
+      newArr[i] = arrToSplit[i-1];
+    }else{
+      newArr[i] = arrToSplit[i];
+      printf("F[%d]=%d", i, arrToSplit[i]);
+    }
+  }
+  printSortedArray("After sorting", newArr);
+  // set new array
+  setNewArrValues(arrToSplit, newArr);
+}
+
+void sort(int * arrToSort){
+  // Sort the first two
   if(arrToSort[0] > arrToSort[1]){
+    printf("%d>%d so swapping them.", arrToSort[0], arrToSort[1]);
     int t1 = arrToSort[0];
     int t2 = arrToSort[1];
     arrToSort[0] = t2;
     arrToSort[1] = t1;
+    printf("Now [%d]=%d & [%d]=%d.", 0, t2, 1, t1);
   }
-  for(int i=2; i <= sizeof(arrToSort); i++){
-    int varToCheck = arrToSort[i];
-    int newPos = 0;
-    int found = 0;
-    int x=i-1;
-    do {
-      printf("\nChecking %d vs %d\n", varToCheck, arrToSort[x]);
-      if(varToCheck > arrToSort[x]){
-        newPos = i; // do nothing
-        found = 1;
-      } else if(varToCheck < arrToSort[x]){
-        if(x>=1 && varToCheck > arrToSort[x-1]){
-          newPos = x;
-          found = 1;
-        } else {
-          newPos = x;
-        }
+
+  // Sort the rest
+  for(int i=2; i <4; i++){
+    int moveRequired = 0;
+    int newPos = i;
+    printSortedArray("Again", arrToSort);
+    printf("\n");
+    for(int x=i-1; x>=0; x--){
+      printf("Check %d v %d:", arrToSort[i], arrToSort[x]);
+      if(arrToSort[i]<arrToSort[x]){
+        printf("New position for %d is: %d,", arrToSort[i], x);
+        moveRequired = 1;
+        newPos = x;
+      }else{
+        printf(" Same pos:[%d]=%d,", newPos, arrToSort[i]);
+        break;
       }
-      x--;
-    }while(x>=0 && found != 1);
-    printf("\n%d should have position %d\n", varToCheck, newPos);
+    }
+
+    if(moveRequired>0){
+      printf("Resort.");
+      printSortedArray("Before Resort", arrToSort);
+      splitArr(arrToSort, newPos, arrToSort[i], i);
+      printSortedArray("After Resort", arrToSort);
+    }
   }
-  printSortedArray(arrToSort);
+  printSortedArray("Final", arrToSort);
 }
 
 int main(int code, char** args){
-  int arrToSort[10] = {11, 12, 2, 4, 55, 36, 35, 88, 29, 10};
-  int *sortedArr = malloc(sizeof(int)*10);
-  printSortedArray(arrToSort);
-  sort((int *) arrToSort, (int *) sortedArr);
+  /* int arrToSort[10] = {11, 12, 2, 4, 55, 36, 35, 88, 29, 10}; */
+  int arrToSort[4] = {12, 11, 2, 4};
+  printSortedArray("Start arr", arrToSort);
+  sort((int *) arrToSort);
   return 0;
 }
 
