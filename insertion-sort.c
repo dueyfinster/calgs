@@ -1,21 +1,21 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-void printSortedArray(char* name, int * sortedArr){
+void printSortedArray(char* name, int * sortedArr, size_t size){
   printf(" %s: [", name);
-  for(int i=0; i < 4; i++){
+  for(int i=0; i < size; i++){
     printf("%d=%d,", i,sortedArr[i]);
   }
   printf("]\n");
 }
 
-void setNewArrValues(int* oldArr, int* newArr){
-    for(int i=0; i<4; i++){
+void setNewArrValues(int* oldArr, size_t size, int* newArr){
+    for(int i=0; i<size; i++){
       oldArr[i] = newArr[i]; // fill with same 
     }
 }
 
-void splitArr(int* arrToSplit, int newIndex, int value, int oldIndex){
+void splitArr(int* arrToSplit, size_t size, int newIndex, int value, int oldIndex){
   // Malloc new array
   int* newArr = malloc(4 * sizeof(int));
   // Fill array to split
@@ -32,22 +32,29 @@ void splitArr(int* arrToSplit, int newIndex, int value, int oldIndex){
     newArr[newIndex] = value;
   }
 
+  newIndex++; // need to fill from now on
+  int oldPos = newIndex-1;
+
   // Fill array after split
-  for(int i=newIndex+1; i<4; i++){
-    if(i-1 != oldIndex){
-      printf("F[%d]=%d", i, arrToSplit[i-1]);
-      newArr[i] = arrToSplit[i-1];
-    }else{
-      newArr[i] = arrToSplit[i];
-      printf("F[%d]=%d", i, arrToSplit[i]);
-    }
+  for(int i=newIndex; i<size; i++){
+     if(oldPos == oldIndex){
+       oldPos++;
+       printf("skip");
+       printf("ASF[%d]=%d,", i, arrToSplit[oldPos]);
+       newArr[i] = arrToSplit[oldPos];
+       oldPos++;
+     }else{
+       printf("AF[%d]=%d,", i, arrToSplit[oldPos]);
+       newArr[i] = arrToSplit[oldPos];
+       oldPos++;
+     }
   }
-  printSortedArray("After sorting", newArr);
+  printSortedArray("After sorting", newArr, size);
   // set new array
-  setNewArrValues(arrToSplit, newArr);
+  setNewArrValues(arrToSplit, size, newArr);
 }
 
-void sort(int * arrToSort){
+void sort(int * arrToSort, size_t size){
   // Sort the first two
   if(arrToSort[0] > arrToSort[1]){
     printf("%d>%d so swapping them.", arrToSort[0], arrToSort[1]);
@@ -59,38 +66,39 @@ void sort(int * arrToSort){
   }
 
   // Sort the rest
-  for(int i=2; i <4; i++){
+  for(int i=2; i<size; i++){
     int moveRequired = 0;
     int newPos = i;
-    printSortedArray("Again", arrToSort);
+    printSortedArray("Again", arrToSort, size);
     printf("\n");
     for(int x=i-1; x>=0; x--){
       printf("Check %d v %d:", arrToSort[i], arrToSort[x]);
       if(arrToSort[i]<arrToSort[x]){
-        printf("New position for %d is: %d,", arrToSort[i], x);
+        printf(" New: [%d]=%d,", x, arrToSort[i]);
         moveRequired = 1;
         newPos = x;
       }else{
-        printf(" Same pos:[%d]=%d,", newPos, arrToSort[i]);
+        printf(" Same:[%d]=%d,", newPos, arrToSort[i]);
         break;
       }
     }
 
     if(moveRequired>0){
       printf("Resort.");
-      printSortedArray("Before Resort", arrToSort);
-      splitArr(arrToSort, newPos, arrToSort[i], i);
-      printSortedArray("After Resort", arrToSort);
+      printSortedArray("Before Resort", arrToSort, size);
+      splitArr(arrToSort, size, newPos, arrToSort[i], i);
+      printSortedArray("After Resort", arrToSort, size);
     }
   }
-  printSortedArray("Final", arrToSort);
+  printSortedArray("Final", arrToSort, size);
 }
 
 int main(int code, char** args){
-  /* int arrToSort[10] = {11, 12, 2, 4, 55, 36, 35, 88, 29, 10}; */
-  int arrToSort[4] = {12, 11, 2, 4};
-  printSortedArray("Start arr", arrToSort);
-  sort((int *) arrToSort);
+  int arrToSort[10] = {11, 12, 2, 4, 55, 36, 35, 88, 29, 10};
+  /* int arrToSort[] = {12, 11, 2, 4, 10}; */
+  size_t size = sizeof arrToSort / sizeof *arrToSort;
+  printSortedArray("Start arr", arrToSort, size);
+  sort((int *) arrToSort, size);
   return 0;
 }
 
