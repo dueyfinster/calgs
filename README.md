@@ -4,7 +4,7 @@ Sorting Algorithms in C for practice
 | Algorithm |
 | --------- |
 | ~~Binary Search~~ |
-| ~~Selection Sort |
+| ~~Selection Sort~~ |
 | ~~Insertion Sort~~ |
 | Merge Sort |
 | Quick Sort |
