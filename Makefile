@@ -15,5 +15,5 @@ run:
 	./$(BIN)/${PROGRAM_NAME}
 
 clean:
-	rm -f $(BIN)/*
+	-@ $(RM) $(BINS)
 
